@@ -31,8 +31,8 @@ const defaultState = {
   fabricWastePercent:0,
 
   variableCosts:[
-    {id:"accessories",name:"Buttons / Accessories",amount:0},
-    {id:"packaging",name:"Packaging",amount:0}
+    {id:"accessories",name:"Buttons / Accessories · أزرار / إكسسوارات",amount:0},
+    {id:"packaging",name:"Packaging · تغليف",amount:0}
   ],
 
   sellingPrice:0,
@@ -81,7 +81,7 @@ function loadState(){
       if(Array.isArray(old.customOverheads)) migrated.customOverheads=old.customOverheads;
       if(Array.isArray(old.employees)){
         migrated.fixedStaff=old.employees.map(e=>({
-          id:e.id||uid(),role:e.role||"Fixed Staff",count:num(e.count),salary:num(e.salary)
+          id:e.id||uid(),role:e.role||"Fixed Staff · موظف ثابت",count:num(e.count),salary:num(e.salary)
         }));
       }
       if(old.visaCostPerEmployee!==undefined) migrated.visaCostEach=num(old.visaCostPerEmployee);
@@ -96,11 +96,11 @@ function loadState(){
       }
 
       migrated.variableCosts=[
-        {id:"accessories",name:"Buttons / Accessories",amount:num(old.accessoriesPerKandura)},
-        {id:"packaging",name:"Packaging",amount:num(old.packagingPerKandura)}
+        {id:"accessories",name:"Buttons / Accessories · أزرار / إكسسوارات",amount:num(old.accessoriesPerKandura)},
+        {id:"packaging",name:"Packaging · تغليف",amount:num(old.packagingPerKandura)}
       ];
       if(num(old.otherVariablePerKandura)>0){
-        migrated.variableCosts.push({id:uid(),name:"Other Variable Cost",amount:num(old.otherVariablePerKandura)});
+        migrated.variableCosts.push({id:uid(),name:"Other Variable Cost · تكلفة متغيرة أخرى",amount:num(old.otherVariablePerKandura)});
       }
       localStorage.setItem(STORAGE_KEY,JSON.stringify(migrated));
       return normalizeState(migrated);
@@ -168,19 +168,19 @@ function bindDynamicActions(){
   $("saveNowBtn").onclick=()=>{saveState();toast("Saved.");};
 
   $("addOverheadBtn").onclick=()=>{
-    state.customOverheads.push({id:uid(),name:"Other Fixed Cost",monthly:0});
+    state.customOverheads.push({id:uid(),name:"Other Fixed Cost · تكلفة ثابتة أخرى",monthly:0});
     markDirty();renderDynamicLists();renderCalculatedOnly();
   };
   $("addFixedStaffBtn").onclick=()=>{
-    state.fixedStaff.push({id:uid(),role:"Fixed Staff",count:1,salary:0});
+    state.fixedStaff.push({id:uid(),role:"Fixed Staff · موظف ثابت",count:1,salary:0});
     markDirty();renderDynamicLists();renderCalculatedOnly();
   };
   $("addPieceStaffBtn").onclick=()=>{
-    state.pieceStaff.push({id:uid(),role:"Tailor / Labor",rate:0});
+    state.pieceStaff.push({id:uid(),role:"Tailor / Labor · خياط / عامل",rate:0});
     markDirty();renderDynamicLists();renderCalculatedOnly();
   };
   $("addVariableBtn").onclick=()=>{
-    state.variableCosts.push({id:uid(),name:"Other Variable Cost",amount:0});
+    state.variableCosts.push({id:uid(),name:"Other Variable Cost · تكلفة متغيرة أخرى",amount:0});
     markDirty();renderDynamicLists();renderCalculatedOnly();
   };
 
@@ -308,30 +308,30 @@ function syncSimpleInputs(){
 function renderDynamicLists(){
   $("customOverheads").innerHTML=state.customOverheads.length?state.customOverheads.map(x=>`
     <div class="row-item simple" data-kind="customOverheads" data-id="${x.id}">
-      <label class="wide">Cost Name<input data-field="name" value="${escapeHtml(x.name)}"></label>
-      <label>Monthly Amount<div class="money-field"><input data-field="monthly" type="number" min="0" step="10" value="${x.monthly}"><span>AED</span></div></label>
+      <label class="wide">Cost Name · اسم التكلفة<input data-field="name" value="${escapeHtml(x.name)}"></label>
+      <label>Monthly Amount · المبلغ الشهري<div class="money-field"><input data-field="monthly" type="number" min="0" step="10" value="${x.monthly}"><span>AED</span></div></label>
       <button class="delete-btn" data-delete="1">×</button>
     </div>`).join(""):'<p class="helper">No custom fixed costs added.</p>';
 
   $("fixedStaffList").innerHTML=state.fixedStaff.length?state.fixedStaff.map(x=>`
     <div class="row-item" data-kind="fixedStaff" data-id="${x.id}">
-      <label class="wide">Role<input data-field="role" value="${escapeHtml(x.role)}"></label>
-      <label>Count<input data-field="count" type="number" min="0" step="1" value="${x.count}"></label>
-      <label>Salary / Person<div class="money-field"><input data-field="salary" type="number" min="0" step="100" value="${x.salary}"><span>AED</span></div></label>
+      <label class="wide">Role · الوظيفة<input data-field="role" value="${escapeHtml(x.role)}"></label>
+      <label>Count · العدد<input data-field="count" type="number" min="0" step="1" value="${x.count}"></label>
+      <label>Salary / Person · راتب الشخص<div class="money-field"><input data-field="salary" type="number" min="0" step="100" value="${x.salary}"><span>AED</span></div></label>
       <button class="delete-btn" data-delete="1">×</button>
     </div>`).join(""):'<p class="helper">No fixed-salary staff added.</p>';
 
   $("pieceStaffList").innerHTML=state.pieceStaff.length?state.pieceStaff.map(x=>`
     <div class="row-item simple" data-kind="pieceStaff" data-id="${x.id}">
-      <label class="wide">Labor Role<input data-field="role" value="${escapeHtml(x.role)}"></label>
-      <label>Pay / Kandura<div class="money-field"><input data-field="rate" type="number" min="0" step="1" value="${x.rate}"><span>AED</span></div></label>
+      <label class="wide">Labor Role · الوظيفة<input data-field="role" value="${escapeHtml(x.role)}"></label>
+      <label>Pay / Kandura · الأجر لكل كندورة<div class="money-field"><input data-field="rate" type="number" min="0" step="1" value="${x.rate}"><span>AED</span></div></label>
       <button class="delete-btn" data-delete="1">×</button>
     </div>`).join(""):'<p class="helper">No per-kandura labor added.</p>';
 
   $("variableCosts").innerHTML=state.variableCosts.length?state.variableCosts.map(x=>`
     <div class="row-item simple" data-kind="variableCosts" data-id="${x.id}">
-      <label class="wide">Variable Cost Name<input data-field="name" value="${escapeHtml(x.name)}"></label>
-      <label>Cost / Kandura<div class="money-field"><input data-field="amount" type="number" min="0" step="1" value="${x.amount}"><span>AED</span></div></label>
+      <label class="wide">Variable Cost Name · اسم التكلفة<input data-field="name" value="${escapeHtml(x.name)}"></label>
+      <label>Cost / Kandura · تكلفة لكل كندورة<div class="money-field"><input data-field="amount" type="number" min="0" step="1" value="${x.amount}"><span>AED</span></div></label>
       <button class="delete-btn" data-delete="1">×</button>
     </div>`).join(""):'<p class="helper">No extra variable costs added.</p>';
 }
@@ -367,28 +367,28 @@ function renderDashboard(c){
   const badge=$("statusBadge");
   badge.className="status-badge";
   if(c.sellingPrice<=0){
-    $("statusTitle").textContent="Enter a selling price";
-    $("statusText").textContent="All costs are still calculated, but break-even requires a selling price.";
-    badge.textContent="Need price";badge.classList.add("neutral");
+    $("statusTitle").textContent="Enter a selling price · أدخل سعر البيع";
+    $("statusText").textContent="All costs are still calculated, but break-even requires a selling price. · يتم حساب جميع التكاليف، لكن نقطة التعادل تحتاج إلى سعر بيع.";
+    badge.textContent="Need price · أدخل السعر";badge.classList.add("neutral");
   }else if(c.contribution<=0){
-    $("statusTitle").textContent="Selling price does not cover variable cost";
+    $("statusTitle").textContent="Selling price does not cover variable cost · سعر البيع لا يغطي التكلفة المتغيرة";
     $("statusText").textContent=`Variable cost is ${money(c.variablePerUnit)} per kandura, above or equal to the selling price.`;
-    badge.textContent="No break-even";badge.classList.add("bad");
+    badge.textContent="No break-even · لا يوجد تعادل";badge.classList.add("bad");
   }else if(c.plannedUnits>0 && c.net>=0){
-    $("statusTitle").textContent="Planned model is profitable";
+    $("statusTitle").textContent="Planned model is profitable · الخطة الحالية مربحة";
     $("statusText").textContent=`At ${Math.round(c.plannedUnits)} kanduras/month, estimated net profit is ${money(c.net)}.`;
-    badge.textContent="Profitable";badge.classList.add("good");
+    badge.textContent="Profitable · مربح";badge.classList.add("good");
   }else{
-    $("statusTitle").textContent="Model calculated";
+    $("statusTitle").textContent="Model calculated · تم حساب النموذج";
     $("statusText").textContent=`Break-even is about ${ceilSafe(c.breakEvenUnits)} kanduras per month at ${money(c.sellingPrice)} selling price.`;
-    badge.textContent="Calculated";badge.classList.add("neutral");
+    badge.textContent="Calculated · محسوب";badge.classList.add("neutral");
   }
 
   const rows=[
-    ["Fabric",c.fabricPerUnit],
-    ["Per-kandura labor",c.pieceLaborPerUnit],
-    ["Other variable",c.otherVariablePerUnit],
-    ["Allocated fixed overhead",c.fixedPerUnit]
+    ["Fabric · القماش",c.fabricPerUnit],
+    ["Per-kandura labor · عمالة لكل كندورة",c.pieceLaborPerUnit],
+    ["Other variable · تكاليف متغيرة أخرى",c.otherVariablePerUnit],
+    ["Allocated fixed overhead · حصة المصاريف الثابتة",c.fixedPerUnit]
   ];
   const max=Math.max(...rows.map(x=>x[1]),1);
   $("unitCostBreakdown").innerHTML=rows.map(([name,v])=>`
@@ -445,7 +445,7 @@ function renderQuantityScenarios(c){
   units.sort((a,b)=>a-b);
 
   $("quantityScenarios").innerHTML=`<div class="table-wrap"><table class="scenario-table">
-    <thead><tr><th>Kanduras</th><th>Revenue</th><th>Total Variable</th><th>Fixed</th><th>Net Profit</th></tr></thead>
+    <thead><tr><th>Kanduras · الكندورات</th><th>Revenue · الإيرادات</th><th>Total Variable · إجمالي المتغير</th><th>Fixed · الثابت</th><th>Net Profit · صافي الربح</th></tr></thead>
     <tbody>${units.map(u=>{
       const revenue=u*c.sellingPrice;
       const variable=u*c.variablePerUnit;
@@ -458,7 +458,7 @@ function renderPriceScenarios(c){
   const price=c.sellingPrice;
   const steps=[-50,-25,0,25,50].map(d=>Math.max(0,price+d));
   $("priceScenarios").innerHTML=`<div class="table-wrap"><table class="scenario-table">
-    <thead><tr><th>Price</th><th>Contribution / Unit</th><th>Break-even Units</th><th>Net at Planned Qty</th></tr></thead>
+    <thead><tr><th>Price · السعر</th><th>Contribution / Unit · هامش المساهمة</th><th>Break-even Units · كمية التعادل</th><th>Net at Planned Qty · الصافي عند الكمية المخططة</th></tr></thead>
     <tbody>${steps.map(p=>{
       const contribution=p-c.variablePerUnit;
       const be=contribution>0?Math.ceil(c.fixedMonthly/contribution):null;

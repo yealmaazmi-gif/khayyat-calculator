@@ -67,3 +67,12 @@ NOTES
 - Every input auto-saves. Save Now is also available.
 - Export/Import backup included.
 - Works offline after first load.
+
+
+V4 - ENGLISH + ARABIC LABELS
+----------------------------
+- Added Arabic translation beside the main English labels throughout the app.
+- Added Arabic wording to key helper text and dynamic staff/cost rows.
+- Calculation model is unchanged from V3.
+- Data/storage model is unchanged, so existing V3 saved values remain compatible.
+- Recommended improvement path from here: use real business inputs first before adding more complexity.
