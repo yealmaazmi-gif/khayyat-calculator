@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#8b5e3c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Khayyat Calculator">
+  <title>Khayyat Business Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <div class="eyebrow">MEN'S TAILOR BUSINESS</div>
+        <h1>Khayyat Calculator</h1>
+        <p class="arabic-subtitle">حاسبة الخياط الرجالي</p>
+        <p>Change any input and the business result updates instantly.</p>
+      </div>
+      <div class="currency-pill">AED</div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-screen="dashboard">Dashboard</button>
+      <button class="tab" data-screen="costs">Costs</button>
+      <button class="tab" data-screen="workers">Workers</button>
+      <button class="tab" data-screen="kandura">Kandura</button>
+      <button class="tab" data-screen="scenarios">Scenarios</button>
+      <button class="tab" data-screen="data">Data</button>
+    </nav>
+
+    <main>
+      <section id="dashboardScreen" class="screen active">
+        <section class="hero-card">
+          <div>
+            <div class="section-kicker">BUSINESS SNAPSHOT</div>
+            <h2 id="businessStatus">Set your inputs to see the result</h2>
+            <p id="businessStatusText">Your monthly break-even and profit will appear here.</p>
+          </div>
+          <div id="statusBadge" class="status-badge neutral">Waiting</div>
+        </section>
+
+        <div class="summary-grid">
+          <article class="summary-card">
+            <span>Monthly Fixed Cost</span>
+            <strong id="monthlyFixedCost">0.00 AED</strong>
+            <small>Rent, salaries, visas, utilities and overhead</small>
+          </article>
+          <article class="summary-card">
+            <span>Cost per Kandura</span>
+            <strong id="costPerKandura">0.00 AED</strong>
+            <small>Fabric + tailoring labor + variable extras</small>
+          </article>
+          <article class="summary-card">
+            <span>Profit per Kandura</span>
+            <strong id="profitPerKandura">0.00 AED</strong>
+            <small>Before monthly fixed overhead</small>
+          </article>
+          <article class="summary-card highlight">
+            <span>Break-even / Month</span>
+            <strong id="breakEvenUnits">0 Kandura</strong>
+            <small id="breakEvenDaily">0 per working day</small>
+          </article>
+        </div>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">CURRENT PLAN</div>
+              <h2>Monthly Outcome</h2>
+            </div>
+          </div>
+          <div class="outcome-grid">
+            <article class="outcome-box">
+              <span>Planned Kanduras</span>
+              <strong id="plannedUnitsView">0</strong>
+            </article>
+            <article class="outcome-box">
+              <span>Revenue</span>
+              <strong id="monthlyRevenue">0.00 AED</strong>
+            </article>
+            <article class="outcome-box">
+              <span>Total Cost</span>
+              <strong id="monthlyTotalCost">0.00 AED</strong>
+            </article>
+            <article class="outcome-box">
+              <span>Net Profit</span>
+              <strong id="monthlyNetProfit">0.00 AED</strong>
+            </article>
+          </div>
+          <div id="profitBar" class="profit-meter"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">QUICK CHANGE</div>
+              <h2>Fast Inputs</h2>
+            </div>
+          </div>
+          <div class="quick-grid">
+            <label>Annual Rent
+              <div class="money-field"><input id="quickAnnualRent" type="number" min="0" step="100"><span>AED</span></div>
+            </label>
+            <label>Selling Price / Kandura
+              <div class="money-field"><input id="quickSellingPrice" type="number" min="0" step="1"><span>AED</span></div>
+            </label>
+            <label>Planned Kanduras / Month
+              <input id="quickPlannedUnits" type="number" min="0" step="1">
+            </label>
+            <label>Target Monthly Profit
+              <div class="money-field"><input id="quickTargetProfit" type="number" min="0" step="100"><span>AED</span></div>
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">COST STRUCTURE</div>
+              <h2>Where the Money Goes</h2>
+            </div>
+          </div>
+          <div class="chart-layout">
+            <div id="costDonut" class="donut">
+              <div class="donut-hole">
+                <small>Monthly cost</small>
+                <strong id="donutTotal">0</strong>
+              </div>
+            </div>
+            <div id="costLegend" class="legend"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">TARGET</div>
+              <h2>How Many Kanduras Do You Need?</h2>
+            </div>
+          </div>
+          <div class="target-grid">
+            <article class="target-card">
+              <span>Break-even</span>
+              <strong id="targetBreakEven">0</strong>
+              <small>Kanduras / month</small>
+            </article>
+            <article class="target-card">
+              <span>For Target Profit</span>
+              <strong id="targetProfitUnits">0</strong>
+              <small>Kanduras / month</small>
+            </article>
+            <article class="target-card">
+              <span>Daily Target</span>
+              <strong id="targetDailyUnits">0</strong>
+              <small>Based on working days</small>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section id="costsScreen" class="screen">
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">FIXED OVERHEAD</div>
+              <h2>Shop Costs</h2>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <label>Annual Rent
+              <div class="money-field"><input id="annualRent" type="number" min="0" step="100"><span>AED</span></div>
+            </label>
+            <label>Electricity / Month
+              <div class="money-field"><input id="electricityMonthly" type="number" min="0" step="10"><span>AED</span></div>
+            </label>
+            <label>Water / Month
+              <div class="money-field"><input id="waterMonthly" type="number" min="0" step="10"><span>AED</span></div>
+            </label>
+            <label>Internet & Phone / Month
+              <div class="money-field"><input id="internetMonthly" type="number" min="0" step="10"><span>AED</span></div>
+            </label>
+            <label>Shop License / Year
+              <div class="money-field"><input id="licenseAnnual" type="number" min="0" step="100"><span>AED</span></div>
+            </label>
+            <label>Insurance / Year
+              <div class="money-field"><input id="insuranceAnnual" type="number" min="0" step="100"><span>AED</span></div>
+            </label>
+            <label>Marketing / Month
+              <div class="money-field"><input id="marketingMonthly" type="number" min="0" step="10"><span>AED</span></div>
+            </label>
+            <label>Maintenance / Month
+              <div class="money-field"><input id="maintenanceMonthly" type="number" min="0" step="10"><span>AED</span></div>
+            </label>
+            <label>Other Fixed Costs / Month
+              <div class="money-field"><input id="otherFixedMonthly" type="number" min="0" step="10"><span>AED</span></div>
+            </label>
+            <label>Working Days / Month
+              <input id="workingDays" type="number" min="1" max="31" step="1">
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">CUSTOM OVERHEAD</div>
+              <h2>Add Other Monthly Costs</h2>
+            </div>
+            <button id="addOverheadBtn" class="btn secondary">+ Add Cost</button>
+          </div>
+          <div id="customOverheadList"></div>
+        </section>
+      </section>
+
+      <section id="workersScreen" class="screen">
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">FIXED SALARY STAFF</div>
+              <h2>Employees</h2>
+            </div>
+            <button id="addEmployeeBtn" class="btn primary">+ Add Employee Type</button>
+          </div>
+          <p class="helper">Use this for manager, salesman, cashier, helper, cutter, cleaner, etc. Add the number of employees and monthly salary per person.</p>
+          <div id="employeeList"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">VISA COST</div>
+              <h2>Visa / Residency Cost</h2>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>Visa Cost per Employee
+              <div class="money-field"><input id="visaCostPerEmployee" type="number" min="0" step="100"><span>AED</span></div>
+            </label>
+            <label>Visa Cycle
+              <select id="visaCycleYears">
+                <option value="1">Every 1 year</option>
+                <option value="2">Every 2 years</option>
+                <option value="3">Every 3 years</option>
+              </select>
+            </label>
+          </div>
+          <div class="mini-summary">
+            <span>Total fixed employees</span><strong id="totalEmployees">0</strong>
+            <span>Monthly salary cost</span><strong id="totalSalaryMonthly">0.00 AED</strong>
+            <span>Monthly visa provision</span><strong id="visaMonthlyProvision">0.00 AED</strong>
+          </div>
+        </section>
+      </section>
+
+      <section id="kanduraScreen" class="screen">
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">FABRIC / TAQA</div>
+              <h2>Material Cost</h2>
+            </div>
+          </div>
+          <p class="helper">“Taqa” is kept as your business term here. Enter the purchase cost of one fabric batch/taqa and how many kanduras you can produce from it.</p>
+          <div class="form-grid">
+            <label>Cost of 1 Taqa / Fabric Batch
+              <div class="money-field"><input id="taqaCost" type="number" min="0" step="10"><span>AED</span></div>
+            </label>
+            <label>Kanduras from 1 Taqa
+              <input id="kandurasPerTaqa" type="number" min="0.1" step="0.1">
+            </label>
+            <label>Fabric Waste %
+              <div class="percent-field"><input id="fabricWastePercent" type="number" min="0" max="100" step="0.5"><span>%</span></div>
+            </label>
+          </div>
+          <div class="calculation-highlight">
+            Fabric cost per kandura:
+            <strong id="fabricCostPerKandura">0.00 AED</strong>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">TAILORING LABOR</div>
+              <h2>Per-Kandura Worker Cost</h2>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>Tailor Payment / Kandura
+              <div class="money-field"><input id="tailorLaborPerKandura" type="number" min="0" step="1"><span>AED</span></div>
+            </label>
+            <label>Other Labor / Kandura
+              <div class="money-field"><input id="otherLaborPerKandura" type="number" min="0" step="1"><span>AED</span></div>
+            </label>
+            <label>Buttons / Accessories / Kandura
+              <div class="money-field"><input id="accessoriesPerKandura" type="number" min="0" step="1"><span>AED</span></div>
+            </label>
+            <label>Packaging / Kandura
+              <div class="money-field"><input id="packagingPerKandura" type="number" min="0" step="1"><span>AED</span></div>
+            </label>
+            <label>Other Variable Cost / Kandura
+              <div class="money-field"><input id="otherVariablePerKandura" type="number" min="0" step="1"><span>AED</span></div>
+            </label>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">SELLING</div>
+              <h2>Price & Margin</h2>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>Selling Price / Kandura
+              <div class="money-field"><input id="sellingPrice" type="number" min="0" step="1"><span>AED</span></div>
+            </label>
+            <label>Planned Kanduras / Month
+              <input id="plannedUnits" type="number" min="0" step="1">
+            </label>
+            <label>Target Monthly Net Profit
+              <div class="money-field"><input id="targetProfit" type="number" min="0" step="100"><span>AED</span></div>
+            </label>
+          </div>
+          <div class="margin-grid">
+            <article><span>Variable Cost</span><strong id="variableCostView">0.00 AED</strong></article>
+            <article><span>Contribution / Kandura</span><strong id="contributionView">0.00 AED</strong></article>
+            <article><span>Contribution Margin</span><strong id="marginPercentView">0.0%</strong></article>
+          </div>
+        </section>
+      </section>
+
+      <section id="scenariosScreen" class="screen">
+        <section class="card">
+          <div class="section-head wrap">
+            <div>
+              <div class="section-kicker">WHAT-IF ANALYSIS</div>
+              <h2>Monthly Sales Scenarios</h2>
+            </div>
+            <div class="scenario-controls">
+              <label>Step size
+                <input id="scenarioStep" type="number" min="1" step="5">
+              </label>
+            </div>
+          </div>
+          <div id="scenarioTable"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">PROFIT CURVE</div>
+              <h2>Units vs Monthly Profit</h2>
+            </div>
+          </div>
+          <div id="profitScenarioChart"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">PRICE TEST</div>
+              <h2>What If You Change the Selling Price?</h2>
+            </div>
+          </div>
+          <div id="priceScenarioTable"></div>
+        </section>
+      </section>
+
+      <section id="dataScreen" class="screen">
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">BACKUP</div>
+              <h2>Export Calculator Data</h2>
+            </div>
+          </div>
+          <p class="helper">Download your full calculator setup so you can restore it later.</p>
+          <button id="exportBtn" class="btn primary full">Export Backup</button>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">RESTORE</div>
+              <h2>Import Backup</h2>
+            </div>
+          </div>
+          <label class="file-btn">
+            Choose Backup File
+            <input id="importFile" type="file" accept=".json,application/json">
+          </label>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">RESET</div>
+              <h2>Start Fresh</h2>
+            </div>
+          </div>
+          <p class="helper">This clears the saved calculator values only on this device/browser.</p>
+          <button id="resetBtn" class="btn danger full">Reset All Data</button>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="confirmModal" class="modal hidden">
+    <div class="modal-card">
+      <h2>Reset all calculator data?</h2>
+      <p>This cannot be undone unless you have exported a backup.</p>
+      <div class="modal-actions">
+        <button id="cancelReset" class="btn secondary">Cancel</button>
+        <button id="confirmReset" class="btn danger">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
