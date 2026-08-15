@@ -1,101 +1,95 @@
-KHAYYAT BUSINESS CALCULATOR — V3
+KHAYYAT BUSINESS CALCULATOR — V6 REBUILD
 
-This version rebuilds the calculation model.
+This version was rebuilt from the business logic, not patched from earlier versions.
 
-IMPORTANT LOGIC
----------------
-Every entered number is saved locally and included in calculations.
-Blank/zero values are treated as zero.
+CALCULATION MODEL
+=================
 
-FIXED MONTHLY COST
-------------------
+1) TOTAL FIXED MONTHLY COST
+---------------------------
 Annual Rent / 12
-+ annual License / 12
-+ annual Insurance / 12
-+ electricity
-+ water
-+ internet
-+ marketing
-+ maintenance
-+ other fixed monthly costs
-+ custom monthly fixed costs
-+ fixed-salary staff
-+ monthly visa provision
++ Electricity / Month
++ Water / Month
++ Internet & Phone / Month
++ Trade License / 12
++ Insurance / 12
++ Marketing / Month
++ Maintenance / Month
++ Other Fixed Cost / Month
++ Extra Custom Fixed Costs
++ Fixed Salary Staff
++ Visa Monthly Provision
 
-MONTHLY VISA PROVISION
-----------------------
-Visa Count × Cost per Visa / (12 × Visa Cycle Years)
-
-VARIABLE COST PER KANDURA
--------------------------
-Fabric Cost per Kandura
-+ all Per-Kandura Labor rates
-+ all Other Variable Costs per Kandura
-
-FABRIC COST PER KANDURA
------------------------
-(Taqa Cost / Kanduras from Taqa) × (1 + Waste %)
-
-FULL COST PER KANDURA
+2) FIXED SALARY STAFF
 ---------------------
-Variable Cost per Kandura
-+ Monthly Fixed Cost / Planned Kanduras per Month
+For each role:
+Quantity × Monthly Salary per Person
 
-BREAK-EVEN QUANTITY
--------------------
-Monthly Fixed Cost / (Selling Price - Variable Cost per Kandura)
+3) VISA MONTHLY PROVISION
+-------------------------
+Number of Visas × Cost per Visa
+÷ (12 × Visa Period in Years)
 
-QUANTITY FOR TARGET PROFIT
---------------------------
-(Monthly Fixed Cost + Target Monthly Profit) /
-(Selling Price - Variable Cost per Kandura)
+4) FABRIC / TAQA COST PER KANDURA
+---------------------------------
+Taqa Cost ÷ Kanduras from One Taqa
+× (1 + Waste %)
 
-PRICE FOR NET ZERO AT PLANNED VOLUME
-------------------------------------
-Variable Cost per Kandura + Monthly Fixed Cost / Planned Units
+5) PER-KANDURA LABOR
+--------------------
+For each labor type:
+Quantity × Pay per Kandura per Worker
 
-PRICE FOR TARGET PROFIT AT PLANNED VOLUME
------------------------------------------
-Variable Cost per Kandura +
-(Monthly Fixed Cost + Target Profit) / Planned Units
+Then all labor rows are added together.
 
-NOTES
------
-- Fixed-salary staff can be added with count and monthly salary.
-- Per-kandura labor can be added separately with one rate per kandura for each labor stage.
-- Visa count is independent, so you enter the total number of visas directly.
-- Every input auto-saves. Save Now is also available.
-- Export/Import backup included.
-- Works offline after first load.
+6) OTHER VARIABLE COSTS
+-----------------------
+Buttons, packaging, embroidery, delivery, accessories, etc.
+All are entered directly as AED per kandura.
 
-
-V4 - ENGLISH + ARABIC LABELS
+7) VARIABLE COST PER KANDURA
 ----------------------------
-- Added Arabic translation beside the main English labels throughout the app.
-- Added Arabic wording to key helper text and dynamic staff/cost rows.
-- Calculation model is unchanged from V3.
-- Data/storage model is unchanged, so existing V3 saved values remain compatible.
-- Recommended improvement path from here: use real business inputs first before adding more complexity.
+Fabric Cost
++ Per-Kandura Labor
++ Other Variable Costs
 
+8) CONTRIBUTION PER KANDURA
+---------------------------
+Selling Price - Variable Cost per Kandura
 
-V5 - FIXED DYNAMIC ADD BUTTONS
+9) BREAK-EVEN KANDURAS / MONTH
 ------------------------------
-Fixed the Add buttons for:
-- Fixed-salary staff
-- Per-kandura labor
-- Custom fixed costs
-- Variable costs
+Total Fixed Monthly Cost
+÷ Contribution per Kandura
 
-Each Add button now immediately creates a visible editable row.
+10) QUANTITY FOR TARGET PROFIT
+------------------------------
+(Total Fixed Monthly Cost + Target Monthly Net Profit)
+÷ Contribution per Kandura
 
-Fixed-salary staff row fields:
-- Job title
-- Quantity
-- Salary per person
+11) FULL COST PER KANDURA AT PLANNED VOLUME
+--------------------------------------------
+Variable Cost per Kandura
++ Total Fixed Monthly Cost ÷ Planned Kanduras per Month
 
-Per-kandura labor row fields:
-- Labor role
-- Pay per kandura
+12) PRICE FOR NET ZERO AT PLANNED VOLUME
+-----------------------------------------
+Same as full cost per kandura at planned volume.
 
-All dynamic values save locally and feed the calculation immediately.
-Arabic labels remain included.
+13) PRICE FOR TARGET PROFIT AT PLANNED VOLUME
+----------------------------------------------
+Variable Cost per Kandura
++ (Total Fixed Monthly Cost + Target Profit)
+÷ Planned Kanduras per Month
+
+IMPORTANT
+=========
+- Blank inputs are treated as zero.
+- Zero inputs are treated as zero.
+- Every input auto-saves locally.
+- Fixed staff and per-kandura labor are separate.
+- Per-kandura labor includes Quantity × Rate per Kandura per Worker.
+- Visa count is entered independently.
+- Fabric/Taqa has a name field.
+- Dashboard shows break-even based on the actual selling price you entered.
+- Existing older versions are not automatically mixed into this new clean model.

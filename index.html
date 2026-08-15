@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#7a5136">
+  <meta name="theme-color" content="#735039">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Khayyat">
@@ -19,86 +19,104 @@
       <div class="eyebrow">MEN'S TAILOR BUSINESS</div>
       <h1>Khayyat Calculator</h1>
       <p class="arabic">حاسبة الخياط الرجالي</p>
-      <p>Every saved input feeds the calculation automatically.</p>
+      <p>Enter your real costs. Blank or zero means zero.</p>
     </div>
     <div class="currency-pill">AED</div>
   </header>
 
   <nav class="tabs">
-    <button class="tab active" data-screen="dashboard">Dashboard · لوحة التحكم</button>
-    <button class="tab" data-screen="shop">Shop Costs · تكاليف المحل</button>
-    <button class="tab" data-screen="staff">Staff · الموظفون</button>
-    <button class="tab" data-screen="kandura">Kandura Cost · تكلفة الكندورة</button>
-    <button class="tab" data-screen="targets">Targets · الأهداف</button>
-    <button class="tab" data-screen="data">Data · البيانات</button>
+    <button class="tab active" data-screen="dashboard">Dashboard<br><span>لوحة التحكم</span></button>
+    <button class="tab" data-screen="fixed">Fixed Costs<br><span>التكاليف الثابتة</span></button>
+    <button class="tab" data-screen="staff">Staff<br><span>الموظفون</span></button>
+    <button class="tab" data-screen="fabric">Taqa / Fabric<br><span>الطاقة / القماش</span></button>
+    <button class="tab" data-screen="sales">Sales<br><span>المبيعات</span></button>
+    <button class="tab" data-screen="data">Data<br><span>البيانات</span></button>
   </nav>
 
   <div class="save-strip">
-    <div><span class="save-dot"></span><strong id="saveStatus">Saved on this device</strong></div>
+    <div><span class="save-dot"></span><strong id="saveStatus">Saved on this device · محفوظ على هذا الجهاز</strong></div>
     <button id="saveNowBtn" class="btn primary">Save Now · حفظ</button>
   </div>
 
   <main>
+    <!-- DASHBOARD -->
     <section id="dashboardScreen" class="screen active">
       <section class="hero-card">
         <div>
-          <div class="section-kicker">CURRENT BUSINESS MODEL · نموذج العمل الحالي</div>
-          <h2 id="statusTitle">Enter your values</h2>
-          <p id="statusText">The result updates immediately.</p>
+          <div class="section-kicker">BUSINESS SNAPSHOT · ملخص المشروع</div>
+          <h2 id="statusTitle">Enter your business values</h2>
+          <p id="statusText">The model will update automatically.</p>
         </div>
-        <span id="statusBadge" class="status-badge neutral">Waiting</span>
+        <span id="statusBadge" class="status-badge neutral">Waiting · انتظار</span>
       </section>
 
       <div class="summary-grid">
         <article class="summary-card">
           <span>Monthly Fixed Cost · التكلفة الثابتة الشهرية</span>
-          <strong id="dashFixed">0.00 AED</strong>
-          <small>Rent + fixed salaries + visas + utilities + overhead</small>
+          <strong id="dashFixedMonthly">0.00 AED</strong>
+          <small>Rent, fixed salaries, visas, utilities and overhead</small>
         </article>
         <article class="summary-card">
           <span>Variable Cost / Kandura · التكلفة المتغيرة للكندورة</span>
-          <strong id="dashVariable">0.00 AED</strong>
-          <small>Fabric · القماش + per-kandura labor + other variable costs</small>
+          <strong id="dashVariableUnit">0.00 AED</strong>
+          <small>Fabric + per-kandura labor + extra variable cost</small>
         </article>
         <article class="summary-card highlight">
-          <span>Full Cost / Kandura · التكلفة الكاملة للكندورة</span>
-          <strong id="dashFullCost">0.00 AED</strong>
-          <small>At your planned monthly production</small>
+          <span>Break-even Quantity · كمية نقطة التعادل</span>
+          <strong id="dashBreakEvenUnits">—</strong>
+          <small>Kanduras per month · كندورة شهرياً</small>
         </article>
         <article class="summary-card">
-          <span>Net Profit · صافي الربح / Kandura · صافي الربح للكندورة</span>
-          <strong id="dashProfitUnit">0.00 AED</strong>
-          <small>At your planned monthly production</small>
+          <span>Daily Break-even · التعادل اليومي</span>
+          <strong id="dashBreakEvenDaily">—</strong>
+          <small>Based on working days · حسب أيام العمل</small>
         </article>
       </div>
 
       <section class="card">
         <div class="section-head">
           <div>
-            <div class="section-kicker">BREAK-EVEN · نقطة التعادل</div>
-            <h2>How Much You Need to Sell · الكمية المطلوبة للبيع</h2>
+            <div class="section-kicker">SELLING MODEL · نموذج البيع</div>
+            <h2>Price, Cost and Profit · السعر والتكلفة والربح</h2>
+          </div>
+        </div>
+        <div class="metric-grid">
+          <div><span>Selling Price · سعر البيع</span><strong id="dashSellingPrice">0.00 AED</strong></div>
+          <div><span>Contribution / Kandura · هامش المساهمة</span><strong id="dashContribution">0.00 AED</strong></div>
+          <div><span>Planned Kanduras / Month · الكمية المخططة شهرياً</span><strong id="dashPlannedUnits">0</strong></div>
+          <div><span>Full Cost / Kandura at Plan · التكلفة الكاملة عند الخطة</span><strong id="dashFullCostUnit">—</strong></div>
+          <div><span>Net Profit / Kandura at Plan · صافي الربح للكندورة</span><strong id="dashProfitUnit">—</strong></div>
+          <div><span>Monthly Net Profit · صافي الربح الشهري</span><strong id="dashMonthlyNet">0.00 AED</strong></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">TARGETS · الأهداف</div>
+            <h2>What You Need to Sell · ما تحتاج إلى بيعه</h2>
           </div>
         </div>
         <div class="target-grid">
-          <article class="target-card">
-            <span>Break-even Quantity · كمية نقطة التعادل</span>
-            <strong id="dashBreakEven">0</strong>
+          <article>
+            <span>For Net Zero · للوصول إلى صفر ربح</span>
+            <strong id="dashZeroUnits">—</strong>
             <small>Kanduras / month</small>
           </article>
-          <article class="target-card">
-            <span>Daily Break-even · التعادل اليومي</span>
-            <strong id="dashBreakEvenDaily">0</strong>
-            <small>Kanduras / working day</small>
-          </article>
-          <article class="target-card">
-            <span>Quantity for Target Profit · الكمية لتحقيق الربح المستهدف</span>
-            <strong id="dashTargetUnits">0</strong>
+          <article>
+            <span>For Target Profit · لتحقيق الربح المستهدف</span>
+            <strong id="dashTargetUnits">—</strong>
             <small>Kanduras / month</small>
           </article>
-          <article class="target-card">
-            <span>Price Needed at Planned Volume · السعر المطلوب عند الكمية المخططة</span>
-            <strong id="dashPriceNeeded">0.00 AED</strong>
-            <small>For your target profit</small>
+          <article>
+            <span>Price for Net Zero at Planned Qty · سعر التعادل عند الكمية المخططة</span>
+            <strong id="dashZeroPrice">—</strong>
+            <small>AED / Kandura</small>
+          </article>
+          <article>
+            <span>Price for Target Profit at Planned Qty · السعر لتحقيق الربح المستهدف</span>
+            <strong id="dashTargetPrice">—</strong>
+            <small>AED / Kandura</small>
           </article>
         </div>
       </section>
@@ -106,41 +124,24 @@
       <section class="card">
         <div class="section-head">
           <div>
-            <div class="section-kicker">PLANNED MONTH · الشهر المخطط</div>
-            <h2>Monthly Outcome · النتيجة الشهرية</h2>
+            <div class="section-kicker">COST BUILD-UP · تكوين التكلفة</div>
+            <h2>One Kandura · كندورة واحدة</h2>
           </div>
         </div>
-        <div class="outcome-grid">
-          <div><span>Planned Kanduras · الكندورات المخططة</span><strong id="dashUnits">0</strong></div>
-          <div><span>Revenue · الإيرادات</span><strong id="dashRevenue · الإيرادات">0.00 AED</strong></div>
-          <div><span>Total Variable · إجمالي المتغير Cost · إجمالي التكلفة المتغيرة</span><strong id="dashTotalVariable">0.00 AED</strong></div>
-          <div><span>Total Fixed Cost · إجمالي التكلفة الثابتة</span><strong id="dashFixed2">0.00 AED</strong></div>
-          <div><span>Total Cost · إجمالي التكلفة</span><strong id="dashTotalCost">0.00 AED</strong></div>
-          <div class="profit-box"><span>Net Profit · صافي الربح</span><strong id="dashNet">0.00 AED</strong></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker">COST BREAKDOWN · تفصيل التكلفة</div>
-            <h2>Where One Kandura Cost · تكلفة الكندورة Comes From · مكونات تكلفة الكندورة</h2>
-          </div>
-        </div>
-        <div id="unitCostBreakdown"></div>
+        <div id="unitCostBars"></div>
       </section>
     </section>
 
-    <section id="shopScreen" class="screen">
+    <!-- FIXED COSTS -->
+    <section id="fixedScreen" class="screen">
       <section class="card">
         <div class="section-head">
           <div>
-            <div class="section-kicker">SHOP OVERHEAD · مصاريف المحل</div>
-            <h2>Fixed Costs · التكاليف الثابتة</h2>
+            <div class="section-kicker">FIXED SHOP COSTS · تكاليف المحل الثابتة</div>
+            <h2>Monthly & Annual Expenses · المصاريف الشهرية والسنوية</h2>
           </div>
         </div>
-        <p class="helper">Leave any field blank or at zero if it does not apply. Zero is treated as zero. · اترك أي خانة فارغة أو ضع صفر إذا لم تكن مطبقة؛ الصفر يُحسب كصفر.</p>
-
+        <p class="helper">Leave any field blank or enter 0 if it does not apply. It will be treated as zero. · اترك الخانة فارغة أو ضع صفر إذا لم تنطبق.</p>
         <div class="form-grid">
           <label>Annual Rent · الإيجار السنوي
             <div class="money-field"><input id="annualRent" type="number" min="0" step="100"><span>AED</span></div>
@@ -151,10 +152,10 @@
           <label>Water / Month · الماء شهرياً
             <div class="money-field"><input id="waterMonthly" type="number" min="0" step="10"><span>AED</span></div>
           </label>
-          <label>Internet / Phone / Month · الإنترنت والهاتف شهرياً
+          <label>Internet & Phone / Month · الإنترنت والهاتف شهرياً
             <div class="money-field"><input id="internetMonthly" type="number" min="0" step="10"><span>AED</span></div>
           </label>
-          <label>License / Year · الرخصة سنوياً
+          <label>Trade License / Year · الرخصة التجارية سنوياً
             <div class="money-field"><input id="licenseAnnual" type="number" min="0" step="100"><span>AED</span></div>
           </label>
           <label>Insurance / Year · التأمين سنوياً
@@ -177,96 +178,108 @@
 
       <section class="card">
         <div class="section-head">
-          <div><div class="section-kicker">CUSTOM COSTS · تكاليف إضافية</div><h2>Other Monthly Fixed Cost · التكلفة الثابتة الشهريةs · تكاليف ثابتة شهرية أخرى</h2></div>
-          <button id="addOverheadBtn" class="btn secondary">+ Add Cost · إضافة تكلفة</button>
+          <div>
+            <div class="section-kicker">EXTRA FIXED COSTS · تكاليف ثابتة إضافية</div>
+            <h2>Custom Monthly Costs · تكاليف شهرية مخصصة</h2>
+          </div>
+          <button id="addFixedCostBtn" class="btn secondary">+ Add Cost · إضافة تكلفة</button>
         </div>
-        <div id="customOverheads"></div>
+        <div id="extraFixedCosts"></div>
       </section>
 
       <section class="card live-card">
         <div class="section-kicker">LIVE RESULT · النتيجة المباشرة</div>
-        <h2>Monthly Fixed Cost · التكلفة الثابتة الشهرية</h2>
-        <strong class="big-number" id="shopFixedTotal">0.00 AED</strong>
+        <h2>Total Fixed Cost per Month · إجمالي التكلفة الثابتة شهرياً</h2>
+        <strong class="big-number" id="fixedLiveTotal">0.00 AED</strong>
+        <div id="fixedBreakdown" class="mini-breakdown"></div>
       </section>
     </section>
 
+    <!-- STAFF -->
     <section id="staffScreen" class="screen">
       <section class="card">
         <div class="section-head">
           <div>
-            <div class="section-kicker">FIXED-SALARY STAFF · موظفون براتب ثابت</div>
-            <h2>Monthly Salary Employees · موظفون برواتب شهرية</h2>
+            <div class="section-kicker">FIXED-SALARY STAFF · موظفون برواتب ثابتة</div>
+            <h2>Monthly Salary Staff · الموظفون برواتب شهرية</h2>
           </div>
-          <button id="addFixedStaff · الموظفونBtn" class="btn primary">+ Add Fixed Staff · الموظفون · إضافة موظف ثابت</button>
+          <button id="addFixedStaffBtn" class="btn primary">+ Add Fixed Staff · إضافة موظف ثابت</button>
         </div>
-        <p class="helper">Examples: manager, salesman, cashier, helper, cutter, cleaner. Enter count and monthly salary per person. · مثال: مدير، بائع، كاشير، مساعد، قصّاص، عامل نظافة. أدخل العدد والراتب الشهري لكل شخص.</p>
-        <div id="fixedStaff · الموظفونList"></div>
+        <p class="helper">Examples: Manager · مدير, Salesman · بائع, Cutter · قصّاص, Cashier · كاشير, Helper · مساعد, Cleaner · عامل نظافة.</p>
+        <div id="fixedStaffList"></div>
       </section>
 
       <section class="card">
         <div class="section-head">
           <div>
             <div class="section-kicker">PER-KANDURA LABOR · عمالة لكل كندورة</div>
-            <h2>Workers Paid per Kandura · عمال يتم الدفع لهم لكل كندورة</h2>
+            <h2>Labor Paid per Kandura · عمال يتم الدفع لهم لكل كندورة</h2>
           </div>
-          <button id="addPieceStaff · الموظفونBtn" class="btn primary">+ Add Per-Kandura Labor · عمالة لكل كندورة · إضافة عامل لكل كندورة</button>
+          <button id="addPieceStaffBtn" class="btn primary">+ Add Labor · إضافة عامل</button>
         </div>
-        <p class="helper">Add every labor stage that is paid per kandura. Each row's rate is added to the cost of one kandura. · أضف كل عامل أو مرحلة يتم الدفع لها لكل كندورة؛ كل مبلغ يُضاف إلى تكلفة الكندورة.</p>
-        <div id="pieceStaff · الموظفونList"></div>
+        <p class="helper">For each labor type, enter quantity and payment per kandura per worker. Example: 2 tailors × 20 AED = 40 AED labor cost per kandura.</p>
+        <div id="pieceStaffList"></div>
       </section>
 
       <section class="card">
         <div class="section-head">
           <div>
-            <div class="section-kicker">VISA / RESIDENCY · التأشيرات والإقامة</div>
-            <h2>Visa Provision · مخصص التأشيرات</h2>
+            <div class="section-kicker">VISAS · التأشيرات</div>
+            <h2>Visa / Residency Cost · تكلفة التأشيرات والإقامة</h2>
           </div>
         </div>
         <div class="form-grid">
-          <label>Total Number of Visas · إجمالي عدد التأشيرات
+          <label>Number of Visas · عدد التأشيرات
             <input id="visaCount" type="number" min="0" step="1">
           </label>
           <label>Cost per Visa · تكلفة التأشيرة الواحدة
             <div class="money-field"><input id="visaCostEach" type="number" min="0" step="100"><span>AED</span></div>
           </label>
-          <label>Visa Renewal Cycle · دورة تجديد التأشيرة
+          <label>Visa Period · مدة التأشيرة
             <select id="visaCycleYears">
-              <option value="1">Every 1 year · كل سنة</option>
-              <option value="2">Every 2 years · كل سنتين</option>
-              <option value="3">Every 3 years · كل ثلاث سنوات</option>
+              <option value="1">1 Year · سنة</option>
+              <option value="2">2 Years · سنتان</option>
+              <option value="3">3 Years · 3 سنوات</option>
             </select>
           </label>
         </div>
-        <div class="mini-summary">
-          <span>Monthly visa provision · مخصص التأشيرات الشهري</span><strong id="visaProvisionView">0.00 AED</strong>
+        <div class="visa-result">
+          <span>Monthly Visa Provision · مخصص التأشيرات الشهري</span>
+          <strong id="visaMonthlyLive">0.00 AED</strong>
         </div>
       </section>
 
       <section class="card live-card">
         <div class="section-kicker">LIVE RESULT · النتيجة المباشرة</div>
-        <h2>Staff · الموظفون Cost · تكلفة الموظفين</h2>
-        <div class="live-grid">
-          <div><span>Fixed Salary / Month · الرواتب الثابتة شهرياً</span><strong id="staffFixedMonthlyView">0.00 AED</strong></div>
-          <div><span>Visa / Month · التأشيرات شهرياً</span><strong id="staffVisaMonthlyView">0.00 AED</strong></div>
-          <div><span>Per-Kandura Labor · عمالة لكل كندورة</span><strong id="staffPieceUnitView">0.00 AED</strong></div>
+        <h2>Staff Cost Summary · ملخص تكلفة الموظفين</h2>
+        <div class="metric-grid">
+          <div><span>Fixed Salaries / Month · الرواتب الثابتة شهرياً</span><strong id="fixedSalaryLive">0.00 AED</strong></div>
+          <div><span>Visa Provision / Month · مخصص التأشيرات شهرياً</span><strong id="visaCostLive">0.00 AED</strong></div>
+          <div><span>Per-Kandura Labor Cost · تكلفة العمالة لكل كندورة</span><strong id="pieceLaborLive">0.00 AED</strong></div>
         </div>
       </section>
     </section>
 
-    <section id="kanduraScreen" class="screen">
+    <!-- FABRIC -->
+    <section id="fabricScreen" class="screen">
       <section class="card">
         <div class="section-head">
-          <div><div class="section-kicker">FABRIC / TAQA · القماش / الطاقة</div><h2>Taqa Cost · تكلفة الطاقة</h2></div>
+          <div>
+            <div class="section-kicker">TAQA / FABRIC · الطاقة / القماش</div>
+            <h2>Fabric Details · بيانات القماش</h2>
+          </div>
         </div>
-        <p class="helper">Enter what one taqa costs and how many kanduras you can make from it. · أدخل تكلفة الطاقة الواحدة وعدد الكندورات التي يمكن إنتاجها منها.</p>
         <div class="form-grid">
+          <label>Fabric / Taqa Name · اسم القماش / الطاقة
+            <input id="fabricName" type="text" placeholder="Example: Japanese White · أبيض ياباني">
+          </label>
           <label>Cost of One Taqa · تكلفة الطاقة الواحدة
             <div class="money-field"><input id="taqaCost" type="number" min="0" step="10"><span>AED</span></div>
           </label>
           <label>Kanduras from One Taqa · عدد الكندورات من الطاقة الواحدة
             <input id="kandurasPerTaqa" type="number" min="0" step="0.1">
           </label>
-          <label>Fabric · القماش Waste % · نسبة هدر القماش
+          <label>Fabric Waste % · نسبة هدر القماش
             <div class="percent-field"><input id="fabricWastePercent" type="number" min="0" max="100" step="0.5"><span>%</span></div>
           </label>
         </div>
@@ -274,114 +287,81 @@
 
       <section class="card">
         <div class="section-head">
-          <div><div class="section-kicker">OTHER VARIABLE COSTS · تكاليف متغيرة أخرى</div><h2>Cost per Kandura · التكلفة لكل كندورة</h2></div>
-          <button id="addVariableBtn" class="btn secondary">+ Add Variable Cost · إضافة تكلفة متغيرة</button>
+          <div>
+            <div class="section-kicker">OTHER VARIABLE COSTS · تكاليف متغيرة أخرى</div>
+            <h2>Per Kandura · لكل كندورة</h2>
+          </div>
+          <button id="addVariableCostBtn" class="btn secondary">+ Add Variable Cost · إضافة تكلفة متغيرة</button>
         </div>
-        <p class="helper">Use this for buttons, packaging, embroidery, delivery, accessories, etc. Leave unused items at zero. · استخدمها للأزرار، التغليف، التطريز، التوصيل، الإكسسوارات وغيرها، واترك غير المستخدم بصفر.</p>
-        <div id="variableCosts"></div>
+        <div id="variableCostList"></div>
       </section>
 
+      <section class="card live-card">
+        <div class="section-kicker">LIVE RESULT · النتيجة المباشرة</div>
+        <h2>Cost of One Kandura Before Fixed Overhead · تكلفة الكندورة قبل المصاريف الثابتة</h2>
+        <div class="metric-grid">
+          <div><span>Fabric Cost / Kandura · تكلفة القماش للكندورة</span><strong id="fabricCostLive">0.00 AED</strong></div>
+          <div><span>Per-Kandura Labor · العمالة لكل كندورة</span><strong id="laborCostLive">0.00 AED</strong></div>
+          <div><span>Other Variable Cost · تكاليف متغيرة أخرى</span><strong id="otherVariableLive">0.00 AED</strong></div>
+          <div><span>Total Variable Cost / Kandura · إجمالي التكلفة المتغيرة</span><strong id="variableCostLive">0.00 AED</strong></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SALES -->
+    <section id="salesScreen" class="screen">
       <section class="card">
         <div class="section-head">
-          <div><div class="section-kicker">SELLING & VOLUME · البيع والكمية</div><h2>Sales Inputs · مدخلات المبيعات</h2></div>
+          <div>
+            <div class="section-kicker">SELLING INPUTS · مدخلات البيع</div>
+            <h2>Price & Production Plan · السعر وخطة الإنتاج</h2>
+          </div>
         </div>
         <div class="form-grid">
-          <label>Selling Price · سعر البيع / Kandura · سعر بيع الكندورة
+          <label>Selling Price / Kandura · سعر بيع الكندورة
             <div class="money-field"><input id="sellingPrice" type="number" min="0" step="1"><span>AED</span></div>
           </label>
-          <label>Planned Kanduras · الكندورات المخططة / Month · عدد الكندورات المخطط شهرياً
+          <label>Planned Kanduras / Month · عدد الكندورات المخطط شهرياً
             <input id="plannedUnits" type="number" min="0" step="1">
           </label>
-          <label>Target Monthly Net Profit · صافي الربح · صافي الربح الشهري المستهدف
+          <label>Target Monthly Net Profit · صافي الربح الشهري المستهدف
             <div class="money-field"><input id="targetProfit" type="number" min="0" step="100"><span>AED</span></div>
           </label>
         </div>
       </section>
 
       <section class="card live-card">
-        <div class="section-kicker">LIVE COST OF ONE KANDURA · التكلفة المباشرة لكندورة واحدة</div>
-        <h2>Complete Unit Economics · اقتصاديات الكندورة الكاملة</h2>
-        <div class="unit-econ-grid">
-          <div><span>Fabric · القماش</span><strong id="fabricUnitView">0.00 AED</strong></div>
-          <div><span>Per-Kandura Labor · عمالة لكل كندورة</span><strong id="pieceLaborUnitView">0.00 AED</strong></div>
-          <div><span>Other Variable · تكاليف متغيرة أخرى</span><strong id="otherVariableUnitView">0.00 AED</strong></div>
-          <div><span>Total Variable · إجمالي المتغير</span><strong id="variableUnitView">0.00 AED</strong></div>
-          <div><span>Fixed Cost Allocation · حصة التكلفة الثابتة</span><strong id="fixedUnitView">0.00 AED</strong></div>
-          <div class="emphasis"><span>FULL COST / KANDURA · التكلفة الكاملة للكندورة</span><strong id="fullUnitView">0.00 AED</strong></div>
-          <div><span>Selling Price · سعر البيع</span><strong id="sellingPriceView">0.00 AED</strong></div>
-          <div class="profit-emphasis"><span>NET PROFIT / KANDURA · صافي الربح للكندورة</span><strong id="profitUnitView">0.00 AED</strong></div>
+        <div class="section-kicker">LIVE RESULT · النتيجة المباشرة</div>
+        <h2>Break-even & Profit · نقطة التعادل والربح</h2>
+        <div class="metric-grid">
+          <div><span>Contribution / Kandura · هامش المساهمة</span><strong id="salesContribution">0.00 AED</strong></div>
+          <div><span>Break-even Units / Month · كمية التعادل شهرياً</span><strong id="salesBreakEven">—</strong></div>
+          <div><span>Units for Target Profit · الكمية لتحقيق الربح المستهدف</span><strong id="salesTargetUnits">—</strong></div>
+          <div><span>Net Profit at Planned Qty · صافي الربح عند الكمية المخططة</span><strong id="salesNetAtPlan">0.00 AED</strong></div>
         </div>
-        <p class="helper">Full cost uses your planned monthly quantity to allocate fixed monthly overhead across each kandura. · التكلفة الكاملة توزّع المصاريف الثابتة الشهرية على عدد الكندورات المخطط إنتاجها شهرياً.</p>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">WHAT-IF · ماذا لو</div>
+            <h2>Quantity vs Profit · الكمية مقابل الربح</h2>
+          </div>
+        </div>
+        <div id="quantityScenarioTable"></div>
       </section>
     </section>
 
-    <section id="targetsScreen" class="screen">
-      <section class="card">
-        <div class="section-head">
-          <div><div class="section-kicker">BREAK-EVEN · نقطة التعادل</div><h2>Quantity Required at Your Selling Price · سعر البيع · الكمية المطلوبة حسب سعر البيع</h2></div>
-        </div>
-        <div class="target-grid">
-          <article class="target-card">
-            <span>Selling Price · سعر البيع</span><strong id="targetSellingPrice">0.00 AED</strong><small>per kandura</small>
-          </article>
-          <article class="target-card">
-            <span>Contribution / Kandura · هامش المساهمة للكندورة</span><strong id="targetContribution">0.00 AED</strong><small>price minus variable cost</small>
-          </article>
-          <article class="target-card">
-            <span>Break-even Quantity · كمية نقطة التعادل</span><strong id="targetBreakEvenUnits">0</strong><small>kanduras / month</small>
-          </article>
-          <article class="target-card">
-            <span>For Target Profit · لتحقيق الربح المستهدف</span><strong id="targetProfitUnits">0</strong><small>kanduras / month</small>
-          </article>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="section-head">
-          <div><div class="section-kicker">PRICE REQUIRED · السعر المطلوب</div><h2>If You Sell Your Planned Quantity · عند بيع الكمية المخططة</h2></div>
-        </div>
-        <div class="target-grid">
-          <article class="target-card">
-            <span>Price for Net Zero · سعر الوصول إلى نقطة التعادل</span><strong id="zeroPriceAtPlan">0.00 AED</strong><small>at planned monthly quantity</small>
-          </article>
-          <article class="target-card">
-            <span>Price for Target Profit · السعر لتحقيق الربح المستهدف</span><strong id="targetPriceAtPlan">0.00 AED</strong><small>at planned monthly quantity</small>
-          </article>
-          <article class="target-card">
-            <span>Daily Units for Break-even · الكمية اليومية للتعادل</span><strong id="dailyBreakEvenTarget">0</strong><small>per working day</small>
-          </article>
-          <article class="target-card">
-            <span>Daily Units for Target Profit · الكمية اليومية للربح المستهدف</span><strong id="dailyTargetProfit">0</strong><small>per working day</small>
-          </article>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="section-head">
-          <div><div class="section-kicker">SCENARIOS · السيناريوهات</div><h2>Monthly Quantity vs Profit · الكمية الشهرية مقابل الربح</h2></div>
-        </div>
-        <div id="quantityScenarios"></div>
-      </section>
-
-      <section class="card">
-        <div class="section-head">
-          <div><div class="section-kicker">PRICE SCENARIOS · السيناريوهات · سيناريوهات السعر</div><h2>What Happens if Price Changes? · ماذا يحدث عند تغيير السعر؟</h2></div>
-        </div>
-        <div id="priceScenarios"></div>
-      </section>
-    </section>
-
+    <!-- DATA -->
     <section id="dataScreen" class="screen">
       <section class="card">
-        <div class="section-head"><div><div class="section-kicker">BACKUP · نسخة احتياطية</div><h2>Export All Saved Inputs · تصدير جميع المدخلات المحفوظة</h2></div></div>
+        <div class="section-head"><div><div class="section-kicker">BACKUP · نسخة احتياطية</div><h2>Export All Inputs · تصدير جميع المدخلات</h2></div></div>
         <button id="exportBtn" class="btn primary full">Export Backup · تصدير نسخة احتياطية</button>
       </section>
-
       <section class="card">
         <div class="section-head"><div><div class="section-kicker">RESTORE · استعادة</div><h2>Import Backup · استيراد نسخة احتياطية</h2></div></div>
         <label class="file-btn">Choose Backup File · اختر ملف النسخة الاحتياطية<input id="importFile" type="file" accept=".json,application/json"></label>
       </section>
-
       <section class="card">
         <div class="section-head"><div><div class="section-kicker">RESET · إعادة ضبط</div><h2>Start Fresh · بدء جديد</h2></div></div>
         <button id="resetBtn" class="btn danger full">Reset All Inputs · مسح جميع المدخلات</button>
@@ -391,14 +371,13 @@
 </div>
 
 <div id="toast" class="toast"></div>
-
 <div id="confirmModal" class="modal hidden">
   <div class="modal-card">
-    <h2>Reset all saved inputs?</h2>
-    <p>This will clear this calculator on this device.</p>
+    <h2>Reset all saved inputs? · مسح جميع المدخلات؟</h2>
+    <p>This clears the calculator values saved on this device.</p>
     <div class="modal-actions">
-      <button id="cancelReset" class="btn secondary">Cancel</button>
-      <button id="confirmReset" class="btn danger">Reset</button>
+      <button id="cancelReset" class="btn secondary">Cancel · إلغاء</button>
+      <button id="confirmReset" class="btn danger">Reset · مسح</button>
     </div>
   </div>
 </div>

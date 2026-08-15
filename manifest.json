@@ -1,12 +1,12 @@
 {
   "name": "Khayyat Business Calculator",
   "short_name": "Khayyat",
-  "description": "Men's tailoring business cost, break-even and profit calculator",
+  "description": "Men's tailoring business break-even and profit calculator",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f6f2ed",
-  "theme_color": "#7a5136",
+  "theme_color": "#735039",
   "orientation": "portrait",
   "icons": [
     {
