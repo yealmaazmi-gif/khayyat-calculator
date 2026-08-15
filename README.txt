@@ -1,81 +1,69 @@
-KHAYYAT BUSINESS CALCULATOR
-حاسبة الخياط الرجالي
+KHAYYAT BUSINESS CALCULATOR — V3
 
-PURPOSE
--------
-A simple offline business feasibility calculator for a men's tailoring shop.
+This version rebuilds the calculation model.
 
-MAIN INPUTS
------------
-- Annual shop rent
-- Monthly electricity, water, internet/phone
-- Annual license and insurance
-- Marketing, maintenance and other fixed monthly costs
-- Custom monthly overhead items
-- Fixed-salary employee roles, employee count and salary per person
-- Visa/residency cost per employee and visa cycle
-- Taqa/fabric batch purchase cost
-- Kanduras produced from one taqa
-- Fabric waste percentage
-- Tailor payment per kandura
-- Other labor, accessories, packaging and other variable costs
-- Selling price per kandura
-- Planned kanduras per month
-- Target monthly profit
-- Working days per month
+IMPORTANT LOGIC
+---------------
+Every entered number is saved locally and included in calculations.
+Blank/zero values are treated as zero.
 
-OUTPUTS
--------
-- Monthly fixed overhead
-- Fabric cost per kandura
-- Total variable cost per kandura
-- Contribution/profit per kandura before fixed overhead
-- Break-even kanduras per month
-- Break-even kanduras per working day
-- Kanduras required for target monthly profit
-- Monthly revenue, total cost and net profit
-- Cost breakdown chart
-- Monthly sales scenarios
-- Profit curve
-- Selling-price scenarios
+FIXED MONTHLY COST
+------------------
+Annual Rent / 12
++ annual License / 12
++ annual Insurance / 12
++ electricity
++ water
++ internet
++ marketing
++ maintenance
++ other fixed monthly costs
++ custom monthly fixed costs
++ fixed-salary staff
++ monthly visa provision
 
-DATA
-----
-The calculator saves its values locally in the browser/device using localStorage.
-Use Data > Export Backup regularly.
-No cloud or account is required.
+MONTHLY VISA PROVISION
+----------------------
+Visa Count × Cost per Visa / (12 × Visa Cycle Years)
 
-GITHUB PAGES
-------------
-Upload these seven files to a NEW public GitHub repository:
-index.html
-style.css
-script.js
-manifest.json
-service-worker.js
-icon-192.png
-icon-512.png
+VARIABLE COST PER KANDURA
+-------------------------
+Fabric Cost per Kandura
++ all Per-Kandura Labor rates
++ all Other Variable Costs per Kandura
 
-Then:
-Settings > Pages > Deploy from a branch > main > /(root) > Save.
+FABRIC COST PER KANDURA
+-----------------------
+(Taqa Cost / Kanduras from Taqa) × (1 + Waste %)
 
-ANDROID
--------
-Open the GitHub Pages URL in Chrome.
-Menu > Add to Home screen / Install app.
+FULL COST PER KANDURA
+---------------------
+Variable Cost per Kandura
++ Monthly Fixed Cost / Planned Kanduras per Month
 
-IPHONE
-------
-Open the GitHub Pages URL in Safari.
-Share > Add to Home Screen > Add.
+BREAK-EVEN QUANTITY
+-------------------
+Monthly Fixed Cost / (Selling Price - Variable Cost per Kandura)
 
-V2 - FULL COST & EDITABLE INPUTS
---------------------------------
-- Every input updates calculations immediately.
-- Inputs remain editable.
-- Changes auto-save locally and there is a Save Changes button.
-- Full Cost / Kandura = variable cost + allocated fixed monthly overhead.
-- Fixed overhead allocation uses Planned Kanduras / Month.
-- Net Profit / Kandura is shown at planned monthly volume.
-- Live result panels added to Costs and Workers.
-- Existing V1 backup remains compatible.
+QUANTITY FOR TARGET PROFIT
+--------------------------
+(Monthly Fixed Cost + Target Monthly Profit) /
+(Selling Price - Variable Cost per Kandura)
+
+PRICE FOR NET ZERO AT PLANNED VOLUME
+------------------------------------
+Variable Cost per Kandura + Monthly Fixed Cost / Planned Units
+
+PRICE FOR TARGET PROFIT AT PLANNED VOLUME
+-----------------------------------------
+Variable Cost per Kandura +
+(Monthly Fixed Cost + Target Profit) / Planned Units
+
+NOTES
+-----
+- Fixed-salary staff can be added with count and monthly salary.
+- Per-kandura labor can be added separately with one rate per kandura for each labor stage.
+- Visa count is independent, so you enter the total number of visas directly.
+- Every input auto-saves. Save Now is also available.
+- Export/Import backup included.
+- Works offline after first load.
