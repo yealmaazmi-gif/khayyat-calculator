@@ -31,8 +31,8 @@ const defaultState = {
   fabricWastePercent:0,
 
   variableCosts:[
-    {id:"accessories",name:"Buttons / Accessories · أزرار / إكسسوارات",amount:0},
-    {id:"packaging",name:"Packaging · تغليف",amount:0}
+    {id:"accessories",name:"Buttons / Accessories",amount:0},
+    {id:"packaging",name:"Packaging",amount:0}
   ],
 
   sellingPrice:0,
@@ -81,7 +81,7 @@ function loadState(){
       if(Array.isArray(old.customOverheads)) migrated.customOverheads=old.customOverheads;
       if(Array.isArray(old.employees)){
         migrated.fixedStaff=old.employees.map(e=>({
-          id:e.id||uid(),role:e.role||"Fixed Staff · موظف ثابت",count:num(e.count),salary:num(e.salary)
+          id:e.id||uid(),role:e.role||"Fixed Staff",count:num(e.count),salary:num(e.salary)
         }));
       }
       if(old.visaCostPerEmployee!==undefined) migrated.visaCostEach=num(old.visaCostPerEmployee);
@@ -96,11 +96,11 @@ function loadState(){
       }
 
       migrated.variableCosts=[
-        {id:"accessories",name:"Buttons / Accessories · أزرار / إكسسوارات",amount:num(old.accessoriesPerKandura)},
-        {id:"packaging",name:"Packaging · تغليف",amount:num(old.packagingPerKandura)}
+        {id:"accessories",name:"Buttons / Accessories",amount:num(old.accessoriesPerKandura)},
+        {id:"packaging",name:"Packaging",amount:num(old.packagingPerKandura)}
       ];
       if(num(old.otherVariablePerKandura)>0){
-        migrated.variableCosts.push({id:uid(),name:"Other Variable Cost · تكلفة متغيرة أخرى",amount:num(old.otherVariablePerKandura)});
+        migrated.variableCosts.push({id:uid(),name:"Other Variable Cost",amount:num(old.otherVariablePerKandura)});
       }
       localStorage.setItem(STORAGE_KEY,JSON.stringify(migrated));
       return normalizeState(migrated);
@@ -165,32 +165,54 @@ function bindSimpleFields(){
 }
 
 function bindDynamicActions(){
-  $("saveNowBtn").onclick=()=>{saveState();toast("Saved.");};
+  $("saveNowBtn").onclick=()=>{saveState();toast("Saved · تم الحفظ");};
 
   $("addOverheadBtn").onclick=()=>{
-    state.customOverheads.push({id:uid(),name:"Other Fixed Cost · تكلفة ثابتة أخرى",monthly:0});
-    markDirty();renderDynamicLists();renderCalculatedOnly();
+    state.customOverheads.push({id:uid(),name:"Other Fixed Cost",monthly:0});
+    saveState();
+    renderDynamicLists();
+    renderCalculatedOnly();
+    toast("Fixed cost row added · تمت إضافة تكلفة ثابتة");
   };
+
   $("addFixedStaffBtn").onclick=()=>{
-    state.fixedStaff.push({id:uid(),role:"Fixed Staff · موظف ثابت",count:1,salary:0});
-    markDirty();renderDynamicLists();renderCalculatedOnly();
+    state.fixedStaff.push({id:uid(),role:"Fixed Staff",count:1,salary:0});
+    saveState();
+    renderDynamicLists();
+    renderCalculatedOnly();
+    toast("Fixed staff row added · تمت إضافة موظف براتب ثابت");
   };
+
   $("addPieceStaffBtn").onclick=()=>{
-    state.pieceStaff.push({id:uid(),role:"Tailor / Labor · خياط / عامل",rate:0});
-    markDirty();renderDynamicLists();renderCalculatedOnly();
+    state.pieceStaff.push({id:uid(),role:"Tailor / Labor",rate:0});
+    saveState();
+    renderDynamicLists();
+    renderCalculatedOnly();
+    toast("Per-kandura labor row added · تمت إضافة عامل لكل كندورة");
   };
+
   $("addVariableBtn").onclick=()=>{
-    state.variableCosts.push({id:uid(),name:"Other Variable Cost · تكلفة متغيرة أخرى",amount:0});
-    markDirty();renderDynamicLists();renderCalculatedOnly();
+    state.variableCosts.push({id:uid(),name:"Other Variable Cost",amount:0});
+    saveState();
+    renderDynamicLists();
+    renderCalculatedOnly();
+    toast("Variable cost row added · تمت إضافة تكلفة متغيرة");
   };
 
   $("customOverheads").addEventListener("input",dynamicInput);
+  $("customOverheads").addEventListener("change",dynamicInput);
   $("customOverheads").addEventListener("click",dynamicDelete);
+
   $("fixedStaffList").addEventListener("input",dynamicInput);
+  $("fixedStaffList").addEventListener("change",dynamicInput);
   $("fixedStaffList").addEventListener("click",dynamicDelete);
+
   $("pieceStaffList").addEventListener("input",dynamicInput);
+  $("pieceStaffList").addEventListener("change",dynamicInput);
   $("pieceStaffList").addEventListener("click",dynamicDelete);
+
   $("variableCosts").addEventListener("input",dynamicInput);
+  $("variableCosts").addEventListener("change",dynamicInput);
   $("variableCosts").addEventListener("click",dynamicDelete);
 
   $("exportBtn").onclick=exportBackup;
@@ -202,22 +224,31 @@ function bindDynamicActions(){
     localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
     $("confirmModal").classList.add("hidden");
     renderAll();
-    toast("All inputs reset.");
+    toast("All inputs reset · تم مسح جميع المدخلات");
   };
 }
 
 function dynamicInput(e){
   const row=e.target.closest("[data-kind]");
   if(!row)return;
+
   const kind=row.dataset.kind;
   const id=row.dataset.id;
   const list=state[kind];
-  const item=list.find(x=>x.id===id);
+  if(!Array.isArray(list))return;
+
+  const item=list.find(x=>String(x.id)===String(id));
   if(!item)return;
+
   const field=e.target.dataset.field;
   if(!field)return;
-  if(["count","salary","rate","monthly","amount"].includes(field)) item[field]=num(e.target.value);
-  else item[field]=e.target.value;
+
+  if(["count","salary","rate","monthly","amount"].includes(field)){
+    item[field]=num(e.target.value);
+  }else{
+    item[field]=e.target.value;
+  }
+
   markDirty();
   renderCalculatedOnly();
 }
@@ -225,12 +256,19 @@ function dynamicInput(e){
 function dynamicDelete(e){
   const btn=e.target.closest("[data-delete]");
   if(!btn)return;
+
   const row=btn.closest("[data-kind]");
-  const kind=row.dataset.kind,id=row.dataset.id;
-  state[kind]=state[kind].filter(x=>x.id!==id);
-  markDirty();
+  if(!row)return;
+
+  const kind=row.dataset.kind;
+  const id=row.dataset.id;
+  if(!Array.isArray(state[kind]))return;
+
+  state[kind]=state[kind].filter(x=>String(x.id)!==String(id));
+  saveState();
   renderDynamicLists();
   renderCalculatedOnly();
+  toast("Row deleted · تم حذف السطر");
 }
 
 function calc(){
@@ -306,34 +344,72 @@ function syncSimpleInputs(){
   });
 }
 function renderDynamicLists(){
-  $("customOverheads").innerHTML=state.customOverheads.length?state.customOverheads.map(x=>`
-    <div class="row-item simple" data-kind="customOverheads" data-id="${x.id}">
-      <label class="wide">Cost Name · اسم التكلفة<input data-field="name" value="${escapeHtml(x.name)}"></label>
-      <label>Monthly Amount · المبلغ الشهري<div class="money-field"><input data-field="monthly" type="number" min="0" step="10" value="${x.monthly}"><span>AED</span></div></label>
-      <button class="delete-btn" data-delete="1">×</button>
-    </div>`).join(""):'<p class="helper">No custom fixed costs added.</p>';
+  $("customOverheads").innerHTML=state.customOverheads.length
+    ? state.customOverheads.map(x=>`
+      <div class="entry-row simple-row" data-kind="customOverheads" data-id="${x.id}">
+        <label class="wide">Cost Name · اسم التكلفة
+          <input data-field="name" value="${escapeHtml(x.name)}">
+        </label>
+        <label>Monthly Amount · المبلغ الشهري
+          <div class="money-field">
+            <input data-field="monthly" type="number" min="0" step="10" value="${num(x.monthly)}">
+            <span>AED</span>
+          </div>
+        </label>
+        <button class="delete-btn" data-delete="1" title="Delete · حذف">×</button>
+      </div>`).join("")
+    : '<p class="helper">No custom fixed costs added · لم تتم إضافة تكاليف ثابتة إضافية.</p>';
 
-  $("fixedStaffList").innerHTML=state.fixedStaff.length?state.fixedStaff.map(x=>`
-    <div class="row-item" data-kind="fixedStaff" data-id="${x.id}">
-      <label class="wide">Role · الوظيفة<input data-field="role" value="${escapeHtml(x.role)}"></label>
-      <label>Count · العدد<input data-field="count" type="number" min="0" step="1" value="${x.count}"></label>
-      <label>Salary / Person · راتب الشخص<div class="money-field"><input data-field="salary" type="number" min="0" step="100" value="${x.salary}"><span>AED</span></div></label>
-      <button class="delete-btn" data-delete="1">×</button>
-    </div>`).join(""):'<p class="helper">No fixed-salary staff added.</p>';
+  $("fixedStaffList").innerHTML=state.fixedStaff.length
+    ? state.fixedStaff.map(x=>`
+      <div class="entry-row staff-row" data-kind="fixedStaff" data-id="${x.id}">
+        <label class="wide">Job Title · المسمى الوظيفي
+          <input data-field="role" value="${escapeHtml(x.role)}" placeholder="e.g. Manager · مدير">
+        </label>
+        <label>Quantity · العدد
+          <input data-field="count" type="number" min="0" step="1" value="${num(x.count)}">
+        </label>
+        <label>Salary / Person · راتب الشخص
+          <div class="money-field">
+            <input data-field="salary" type="number" min="0" step="100" value="${num(x.salary)}">
+            <span>AED</span>
+          </div>
+        </label>
+        <button class="delete-btn" data-delete="1" title="Delete · حذف">×</button>
+      </div>`).join("")
+    : '<p class="helper">No fixed-salary staff added · لم تتم إضافة موظفين برواتب ثابتة.</p>';
 
-  $("pieceStaffList").innerHTML=state.pieceStaff.length?state.pieceStaff.map(x=>`
-    <div class="row-item simple" data-kind="pieceStaff" data-id="${x.id}">
-      <label class="wide">Labor Role · الوظيفة<input data-field="role" value="${escapeHtml(x.role)}"></label>
-      <label>Pay / Kandura · الأجر لكل كندورة<div class="money-field"><input data-field="rate" type="number" min="0" step="1" value="${x.rate}"><span>AED</span></div></label>
-      <button class="delete-btn" data-delete="1">×</button>
-    </div>`).join(""):'<p class="helper">No per-kandura labor added.</p>';
+  $("pieceStaffList").innerHTML=state.pieceStaff.length
+    ? state.pieceStaff.map(x=>`
+      <div class="entry-row simple-row" data-kind="pieceStaff" data-id="${x.id}">
+        <label class="wide">Labor Role · نوع العامل
+          <input data-field="role" value="${escapeHtml(x.role)}" placeholder="e.g. Tailor · خياط">
+        </label>
+        <label>Pay / Kandura · الأجر لكل كندورة
+          <div class="money-field">
+            <input data-field="rate" type="number" min="0" step="1" value="${num(x.rate)}">
+            <span>AED</span>
+          </div>
+        </label>
+        <button class="delete-btn" data-delete="1" title="Delete · حذف">×</button>
+      </div>`).join("")
+    : '<p class="helper">No per-kandura labor added · لم تتم إضافة عمالة محسوبة لكل كندورة.</p>';
 
-  $("variableCosts").innerHTML=state.variableCosts.length?state.variableCosts.map(x=>`
-    <div class="row-item simple" data-kind="variableCosts" data-id="${x.id}">
-      <label class="wide">Variable Cost Name · اسم التكلفة<input data-field="name" value="${escapeHtml(x.name)}"></label>
-      <label>Cost / Kandura · تكلفة لكل كندورة<div class="money-field"><input data-field="amount" type="number" min="0" step="1" value="${x.amount}"><span>AED</span></div></label>
-      <button class="delete-btn" data-delete="1">×</button>
-    </div>`).join(""):'<p class="helper">No extra variable costs added.</p>';
+  $("variableCosts").innerHTML=state.variableCosts.length
+    ? state.variableCosts.map(x=>`
+      <div class="entry-row simple-row" data-kind="variableCosts" data-id="${x.id}">
+        <label class="wide">Variable Cost Name · اسم التكلفة المتغيرة
+          <input data-field="name" value="${escapeHtml(x.name)}">
+        </label>
+        <label>Cost / Kandura · تكلفة لكل كندورة
+          <div class="money-field">
+            <input data-field="amount" type="number" min="0" step="1" value="${num(x.amount)}">
+            <span>AED</span>
+          </div>
+        </label>
+        <button class="delete-btn" data-delete="1" title="Delete · حذف">×</button>
+      </div>`).join("")
+    : '<p class="helper">No extra variable costs added · لم تتم إضافة تكاليف متغيرة إضافية.</p>';
 }
 
 function renderCalculatedOnly(){

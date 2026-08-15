@@ -76,3 +76,26 @@ V4 - ENGLISH + ARABIC LABELS
 - Calculation model is unchanged from V3.
 - Data/storage model is unchanged, so existing V3 saved values remain compatible.
 - Recommended improvement path from here: use real business inputs first before adding more complexity.
+
+
+V5 - FIXED DYNAMIC ADD BUTTONS
+------------------------------
+Fixed the Add buttons for:
+- Fixed-salary staff
+- Per-kandura labor
+- Custom fixed costs
+- Variable costs
+
+Each Add button now immediately creates a visible editable row.
+
+Fixed-salary staff row fields:
+- Job title
+- Quantity
+- Salary per person
+
+Per-kandura labor row fields:
+- Labor role
+- Pay per kandura
+
+All dynamic values save locally and feed the calculation immediately.
+Arabic labels remain included.
