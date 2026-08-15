@@ -43,6 +43,7 @@ const defaults = {
 
 let state = loadState();
 let toastTimer = null;
+let saveTimer = null;
 
 const $ = id => document.getElementById(id);
 
@@ -118,18 +119,30 @@ function bindInputs(){
   Object.keys(fieldMap).forEach(id=>{
     const el=$(id);
     if(!el)return;
-    el.addEventListener("input",()=>{
+    const update=()=>{
       state[fieldMap[id]]=num(el.value);
-      saveRender();
-    });
-    el.addEventListener("change",()=>{
-      state[fieldMap[id]]=num(el.value);
-      saveRender();
-    });
+      markDirtyAndAutoSave();
+      renderCalculationsOnly();
+    };
+    el.addEventListener("input",update);
+    el.addEventListener("change",update);
   });
 }
 
+function setSavedStatus(saved){
+  const strip=document.querySelector(".save-strip");
+  if(!strip)return;
+  strip.classList.toggle("dirty",!saved);
+  $("saveStatus").textContent=saved ? "Changes saved on this device" : "Changes changed — saving...";
+}
+function markDirtyAndAutoSave(){
+  setSavedStatus(false);
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{saveState();setSavedStatus(true);},450);
+}
+
 function bindDynamicButtons(){
+  $("saveAllBtn").onclick=()=>{saveState();setSavedStatus(true);toast("Changes saved.");};
   $("addEmployeeBtn").onclick=()=>{
     state.employees.push({id:uid(),role:"New Employee Type",count:1,salary:2500});
     saveRender();
@@ -165,7 +178,8 @@ function handleEmployeeEdit(e){
   if(field==="role")emp.role=e.target.value;
   if(field==="count")emp.count=num(e.target.value);
   if(field==="salary")emp.salary=num(e.target.value);
-  saveRender();
+  markDirtyAndAutoSave();
+  renderCalculationsOnly();
 }
 function handleEmployeeClick(e){
   const btn=e.target.closest("[data-delete-employee]");
@@ -180,7 +194,8 @@ function handleOverheadEdit(e){
   if(!item)return;
   if(e.target.dataset.field==="name")item.name=e.target.value;
   if(e.target.dataset.field==="monthly")item.monthly=num(e.target.value);
-  saveRender();
+  markDirtyAndAutoSave();
+  renderCalculationsOnly();
 }
 function handleOverheadClick(e){
   const btn=e.target.closest("[data-delete-overhead]");
@@ -225,11 +240,18 @@ function calc(){
   const totalVariable=units*variablePerUnit;
   const totalCost=fixedMonthly+totalVariable;
   const net=revenue-totalCost;
+  const fixedCostPerUnit=units>0?fixedMonthly/units:0;
+  const fullCostPerUnit=units>0?variablePerUnit+fixedCostPerUnit:variablePerUnit;
+  const netProfitPerUnit=units>0?num(state.sellingPrice)-fullCostPerUnit:0;
+  const staffMonthly=salaryMonthly+visaMonthly;
+  const staffCostPerUnit=units>0?staffMonthly/units:0;
+  const otherVariableOnly=variablePerUnit-fabricCost;
 
   return {
     totalEmployees,salaryMonthly,visaMonthly,rentMonthly,licenseMonthly,insuranceMonthly,customMonthly,
     fixedMonthly,baseFabricCost,fabricCost,variablePerUnit,contribution,contributionMargin,
-    breakEven,targetUnits,units,revenue,totalVariable,totalCost,net
+    breakEven,targetUnits,units,revenue,totalVariable,totalCost,net,
+    fixedCostPerUnit,fullCostPerUnit,netProfitPerUnit,staffMonthly,staffCostPerUnit,otherVariableOnly
   };
 }
 
@@ -238,9 +260,15 @@ function render(){
   syncInputs();
   renderEmployees();
   renderCustomOverheads();
+  renderCalculationsOnly();
+  setSavedStatus(true);
+}
+function renderCalculationsOnly(){
   renderDashboard();
   renderKandura();
   renderScenarios();
+  renderWorkerImpact();
+  renderCostImpact();
 }
 
 function renderScreens(){
@@ -301,7 +329,7 @@ function renderDashboard(){
   const c=calc();
   $("monthlyFixedCost").textContent=money(c.fixedMonthly);
   $("costPerKandura").textContent=money(c.variablePerUnit);
-  $("profitPerKandura").textContent=money(c.contribution);
+  $("fullCostPerKandura").textContent=money(c.fullCostPerUnit);
   $("breakEvenUnits").textContent=Number.isFinite(c.breakEven)?`${ceilSafe(c.breakEven)} Kandura`:"Not possible";
   $("breakEvenDaily").textContent=Number.isFinite(c.breakEven)&&state.workingDays>0
     ? `${(c.breakEven/state.workingDays).toFixed(1)} per working day`
@@ -312,6 +340,8 @@ function renderDashboard(){
   $("monthlyTotalCost").textContent=money(c.totalCost);
   $("monthlyNetProfit").textContent=money(c.net);
   $("monthlyNetProfit").style.color=c.net>=0?"var(--green)":"var(--red)";
+  $("netProfitPerKandura").textContent=money(c.netProfitPerUnit);
+  $("netProfitPerKandura").style.color=c.netProfitPerUnit>=0?"var(--green)":"var(--red)";
 
   const badge=$("statusBadge");
   badge.className="status-badge";
@@ -384,10 +414,40 @@ function renderCostDonut(c){
 function renderKandura(){
   const c=calc();
   $("fabricCostPerKandura").textContent=money(c.fabricCost);
+  $("fabricCostView").textContent=money(c.fabricCost);
+  $("otherVariableCostView").textContent=money(c.otherVariableOnly);
   $("variableCostView").textContent=money(c.variablePerUnit);
+  $("fixedCostPerUnitView").textContent=money(c.fixedCostPerUnit);
+  $("fullCostView").textContent=money(c.fullCostPerUnit);
+  $("netProfitPerUnitView").textContent=money(c.netProfitPerUnit);
+  $("netProfitPerUnitView").style.color=c.netProfitPerUnit>=0?"var(--green)":"var(--red)";
   $("contributionView").textContent=money(c.contribution);
   $("contributionView").style.color=c.contribution>=0?"var(--green)":"var(--red)";
   $("marginPercentView").textContent=pct(c.contributionMargin);
+  $("fullCostFormula").innerHTML=`
+    <div class="formula-line"><span>Fabric cost</span><strong>${money(c.fabricCost)}</strong></div>
+    <div class="formula-line"><span>Tailoring labor + accessories + packaging + other variable</span><strong>${money(c.otherVariableOnly)}</strong></div>
+    <div class="formula-line"><span>Total variable cost</span><strong>${money(c.variablePerUnit)}</strong></div>
+    <div class="formula-line"><span>Monthly fixed overhead</span><strong>${money(c.fixedMonthly)}</strong></div>
+    <div class="formula-line"><span>Fixed overhead allocated per kandura (${Math.round(c.units)} planned/month)</span><strong>${money(c.fixedCostPerUnit)}</strong></div>
+    <div class="formula-line total"><span>FULL COST OF ONE KANDURA</span><strong>${money(c.fullCostPerUnit)}</strong></div>
+    <div class="formula-line"><span>Selling price</span><strong>${money(state.sellingPrice)}</strong></div>
+    <div class="formula-line profit"><span>NET PROFIT PER KANDURA AT PLANNED VOLUME</span><strong style="color:${c.netProfitPerUnit>=0?"var(--green)":"var(--red)"}">${money(c.netProfitPerUnit)}</strong></div>`;
+}
+
+function renderWorkerImpact(){
+  const c=calc();
+  $("workersSalaryImpact").textContent=money(c.salaryMonthly);
+  $("workersVisaImpact").textContent=money(c.visaMonthly);
+  $("workersPerUnitImpact").textContent=money(c.staffCostPerUnit);
+  $("workersCountImpact").textContent=c.totalEmployees;
+}
+function renderCostImpact(){
+  const c=calc();
+  $("costsFixedMonthly").textContent=money(c.fixedMonthly);
+  $("costsFixedPerUnit").textContent=money(c.fixedCostPerUnit);
+  $("costsVariablePerUnit").textContent=money(c.variablePerUnit);
+  $("costsFullPerUnit").textContent=money(c.fullCostPerUnit);
 }
 
 function renderScenarios(){

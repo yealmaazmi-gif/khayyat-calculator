@@ -168,3 +168,27 @@ input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px #efe0d
   .summary-grid,.outcome-grid{grid-template-columns:1fr}
   .hero-card{flex-direction:column}
 }
+
+.save-strip{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:-4px 0 15px;padding:10px 12px;border:1px solid var(--border);border-radius:14px;background:#fffffff0}
+.save-strip>div{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
+.save-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--greenSoft)}
+.save-strip.dirty .save-dot{background:var(--gold);box-shadow:0 0 0 4px #fff6df}
+.live-result-card{border-color:#d9c4ae;background:linear-gradient(180deg,#fffaf5,#fff)}
+.live-result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.live-result-grid>div{padding:13px;border:1px solid var(--border);border-radius:13px;background:#fff}
+.live-result-grid span{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-bottom:6px}
+.live-result-grid strong{font-size:17px}
+.live-result-grid .emphasis{border-color:#d5b08a;background:#fff8ef}
+.live-result-grid .emphasis strong{color:var(--primary);font-size:19px}
+.full-cost-tile{border-color:#d5b08a!important;background:#fff8ef!important}
+.full-cost-tile strong{color:var(--primary)!important;font-size:20px!important}
+.formula-card{background:linear-gradient(135deg,#fff8ef,#fff)}
+.formula-card h2{margin:5px 0 14px}
+.formula-lines{display:grid;gap:8px}
+.formula-line{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.formula-line span{color:var(--muted)}
+.formula-line.total{border-color:#d5b08a;background:#fff8ef;font-weight:900}
+.formula-line.profit{border-color:#b9dfc7;background:#f2fbf5;font-weight:900}
+.outcome-grid{grid-template-columns:repeat(5,1fr)}
+@media(max-width:800px){.live-result-grid{grid-template-columns:repeat(2,1fr)}.outcome-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.save-strip{align-items:stretch;flex-direction:column}.save-strip .btn{width:100%}.live-result-grid{grid-template-columns:1fr}}

@@ -68,3 +68,14 @@ IPHONE
 ------
 Open the GitHub Pages URL in Safari.
 Share > Add to Home Screen > Add.
+
+V2 - FULL COST & EDITABLE INPUTS
+--------------------------------
+- Every input updates calculations immediately.
+- Inputs remain editable.
+- Changes auto-save locally and there is a Save Changes button.
+- Full Cost / Kandura = variable cost + allocated fixed monthly overhead.
+- Fixed overhead allocation uses Planned Kanduras / Month.
+- Net Profit / Kandura is shown at planned monthly volume.
+- Live result panels added to Costs and Workers.
+- Existing V1 backup remains compatible.

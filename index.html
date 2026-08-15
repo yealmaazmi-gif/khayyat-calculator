@@ -32,6 +32,10 @@
       <button class="tab" data-screen="scenarios">Scenarios</button>
       <button class="tab" data-screen="data">Data</button>
     </nav>
+    <div class="save-strip">
+      <div><span class="save-dot"></span><strong id="saveStatus">Changes saved on this device</strong></div>
+      <button id="saveAllBtn" class="btn primary">Save Changes</button>
+    </div>
 
     <main>
       <section id="dashboardScreen" class="screen active">
@@ -51,14 +55,14 @@
             <small>Rent, salaries, visas, utilities and overhead</small>
           </article>
           <article class="summary-card">
-            <span>Cost per Kandura</span>
+            <span>Variable Cost / Kandura</span>
             <strong id="costPerKandura">0.00 AED</strong>
             <small>Fabric + tailoring labor + variable extras</small>
           </article>
           <article class="summary-card">
-            <span>Profit per Kandura</span>
-            <strong id="profitPerKandura">0.00 AED</strong>
-            <small>Before monthly fixed overhead</small>
+            <span>Full Cost / Kandura</span>
+            <strong id="fullCostPerKandura">0.00 AED</strong>
+            <small>Includes rent, salaries, visas and all fixed overhead</small>
           </article>
           <article class="summary-card highlight">
             <span>Break-even / Month</span>
@@ -90,6 +94,10 @@
             <article class="outcome-box">
               <span>Net Profit</span>
               <strong id="monthlyNetProfit">0.00 AED</strong>
+            </article>
+            <article class="outcome-box">
+              <span>Net Profit / Kandura</span>
+              <strong id="netProfitPerKandura">0.00 AED</strong>
             </article>
           </div>
           <div id="profitBar" class="profit-meter"></div>
@@ -206,6 +214,17 @@
           </div>
         </section>
 
+        <section class="card live-result-card">
+          <div class="section-head"><div><div class="section-kicker">LIVE RESULT</div><h2>How These Costs Affect One Kandura</h2></div></div>
+          <div class="live-result-grid">
+            <div><span>Monthly Fixed Overhead</span><strong id="costsFixedMonthly">0.00 AED</strong></div>
+            <div><span>Fixed Cost / Kandura</span><strong id="costsFixedPerUnit">0.00 AED</strong></div>
+            <div><span>Variable Cost / Kandura</span><strong id="costsVariablePerUnit">0.00 AED</strong></div>
+            <div class="emphasis"><span>Full Cost / Kandura</span><strong id="costsFullPerUnit">0.00 AED</strong></div>
+          </div>
+          <p class="helper">Fixed cost per kandura uses your planned monthly kandura quantity.</p>
+        </section>
+
         <section class="card">
           <div class="section-head">
             <div>
@@ -229,6 +248,16 @@
           </div>
           <p class="helper">Use this for manager, salesman, cashier, helper, cutter, cleaner, etc. Add the number of employees and monthly salary per person.</p>
           <div id="employeeList"></div>
+        </section>
+
+        <section class="card live-result-card">
+          <div class="section-head"><div><div class="section-kicker">LIVE RESULT</div><h2>Staff Cost Impact</h2></div></div>
+          <div class="live-result-grid">
+            <div><span>Fixed Salaries / Month</span><strong id="workersSalaryImpact">0.00 AED</strong></div>
+            <div><span>Visa Provision / Month</span><strong id="workersVisaImpact">0.00 AED</strong></div>
+            <div><span>Staff Cost / Kandura</span><strong id="workersPerUnitImpact">0.00 AED</strong></div>
+            <div class="emphasis"><span>Total Employees</span><strong id="workersCountImpact">0</strong></div>
+          </div>
         </section>
 
         <section class="card">
@@ -329,10 +358,20 @@
             </label>
           </div>
           <div class="margin-grid">
-            <article><span>Variable Cost</span><strong id="variableCostView">0.00 AED</strong></article>
+            <article><span>Fabric Cost / Kandura</span><strong id="fabricCostView">0.00 AED</strong></article>
+            <article><span>Other Variable Cost</span><strong id="otherVariableCostView">0.00 AED</strong></article>
+            <article><span>Total Variable Cost</span><strong id="variableCostView">0.00 AED</strong></article>
+            <article><span>Fixed Overhead / Kandura</span><strong id="fixedCostPerUnitView">0.00 AED</strong></article>
+            <article class="full-cost-tile"><span>Full Cost / Kandura</span><strong id="fullCostView">0.00 AED</strong></article>
+            <article><span>Net Profit / Kandura</span><strong id="netProfitPerUnitView">0.00 AED</strong></article>
             <article><span>Contribution / Kandura</span><strong id="contributionView">0.00 AED</strong></article>
             <article><span>Contribution Margin</span><strong id="marginPercentView">0.0%</strong></article>
           </div>
+        </section>
+        <section class="card formula-card">
+          <div class="section-kicker">HOW THE FULL COST IS CALCULATED</div>
+          <h2>One Kandura — Complete Cost</h2>
+          <div id="fullCostFormula" class="formula-lines"></div>
         </section>
       </section>
 

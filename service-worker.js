@@ -1,4 +1,4 @@
-const CACHE_NAME = "khayyat-calculator-v1";
+const CACHE_NAME = "khayyat-calculator-v2";
 const FILES = [
   "./",
   "./index.html",
