@@ -93,3 +93,15 @@ IMPORTANT
 - Fabric/Taqa has a name field.
 - Dashboard shows break-even based on the actual selling price you entered.
 - Existing older versions are not automatically mixed into this new clean model.
+
+
+V6B - BREAK-EVEN EMPHASIS
+-------------------------
+The dashboard now makes the main business result very prominent:
+
+Minimum Kanduras to Reach Net Zero =
+Total Fixed Monthly Cost
+/
+(Selling Price per Kandura - Variable Cost per Kandura)
+
+All saved inputs continue feeding the same model.

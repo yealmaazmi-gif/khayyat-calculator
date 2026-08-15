@@ -446,6 +446,23 @@ function renderSales(c){
 function renderDashboard(c){
   $("dashFixedMonthly").textContent=money(c.totalFixedMonthly);
   $("dashVariableUnit").textContent=money(c.variableCostPerUnit);
+
+  $("mainBreakEvenUnits").textContent=Number.isFinite(c.breakEvenUnits)?ceilSafe(c.breakEvenUnits):"—";
+  $("formulaFixed").textContent=money(c.totalFixedMonthly);
+  $("formulaPrice").textContent=money(c.sellingPrice);
+  $("formulaVariable").textContent=money(c.variableCostPerUnit);
+  $("formulaContribution").textContent=money(c.contributionPerUnit);
+  $("formulaBreakEven").textContent=Number.isFinite(c.breakEvenUnits)
+    ? `${ceilSafe(c.breakEvenUnits)} Kanduras / Month · كندورة / شهر`
+    : "Not possible at this price · غير ممكن بهذا السعر";
+
+  if(c.sellingPrice<=0){
+    $("breakEvenExplanation").textContent="Enter the selling price per kandura. All entered costs are already included in the calculation. · أدخل سعر بيع الكندورة، وجميع التكاليف المدخلة محسوبة.";
+  }else if(c.contributionPerUnit<=0){
+    $("breakEvenExplanation").textContent=`Selling price ${money(c.sellingPrice)} does not cover the variable cost ${money(c.variableCostPerUnit)}. Increase the price or reduce variable cost. · سعر البيع لا يغطي التكلفة المتغيرة.`;
+  }else{
+    $("breakEvenExplanation").textContent=`At ${money(c.sellingPrice)} selling price, each kandura contributes ${money(c.contributionPerUnit)} toward fixed monthly costs of ${money(c.totalFixedMonthly)}. You must sell at least ${ceilSafe(c.breakEvenUnits)} kanduras per month to reach net zero. · يجب بيع ${ceilSafe(c.breakEvenUnits)} كندورة على الأقل شهرياً للوصول إلى نقطة التعادل.`;
+  }
   $("dashBreakEvenUnits").textContent=Number.isFinite(c.breakEvenUnits)?ceilSafe(c.breakEvenUnits):"—";
   $("dashBreakEvenDaily").textContent=
     Number.isFinite(c.breakEvenUnits)&&num(state.workingDays)>0
