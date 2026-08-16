@@ -105,3 +105,12 @@ Total Fixed Monthly Cost
 (Selling Price per Kandura - Variable Cost per Kandura)
 
 All saved inputs continue feeding the same model.
+
+V7 - MULTI FABRIC + MULTI PRODUCT
+- Multiple fabrics/Taqas, one selected as main.
+- Fabric scenarios compare break-even by fabric.
+- Other products: shirts, shoes, accessories, etc.
+- Other-product contribution reduces fixed OPEX Kanduras must cover.
+- Extra OPEX inputs: accounting, software/POS, consumables, staff transport/accommodation.
+- Extra Kandura variable inputs: payment fee %, rework, pressing/laundry, delivery.
+- Blank/zero values are treated as zero.
